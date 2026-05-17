@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model OcrRequest {
+  id          String   @id @default(uuid())
+  fileName    String
+  filePath    String
+  status      OcrStatus @default(QUEUED)
+  retryCount  Int      @default(0)
+  errorMessage String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  result      OcrResult?
+}
+
+model OcrResult {
+  id          String   @id @default(uuid())
+  requestId   String   @unique
+  text        String
+  rawResponse Json
+  createdAt   DateTime @default(now())
+
+  request     OcrRequest @relation(fields: [requestId], references: [id])
+}
+
+enum OcrStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
