@@ -20,6 +20,7 @@ model OcrRequest {
   result      OcrResult?
 }
 
+
 model OcrResult {
   id          String   @id @default(uuid())
   requestId   String   @unique
@@ -29,6 +30,7 @@ model OcrResult {
 
   request     OcrRequest @relation(fields: [requestId], references: [id])
 }
+///based on the provided image we can further split the schema but for generalization I used rawResponse;
 
 enum OcrStatus {
   QUEUED
